@@ -21,15 +21,6 @@ def part1(input_str):
     # sort the numbers:
     # print(left, right)
 
-    # Inline test for checking list population
-    # input_str = "1 8\n2 7\n3 6\n4 5"
-    # left, right = [], []
-    # for line in input_str.splitlines():
-    #     left.append(int(line.split(" ")[0].strip()))
-    #     right.append(int(line.split(" ")[-1].strip()))
-    # assert left == [1, 2, 3, 4], f"Expected [1, 2, 3, 4], but got {left}"
-    # assert right == [8, 7, 6, 5], f"Expected [8, 7, 6, 5], but got {right}"
-
     sorted_left = sorted(left)
     sorted_right = sorted(right)
 
