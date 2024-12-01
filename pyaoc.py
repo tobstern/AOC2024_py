@@ -14,7 +14,7 @@ def read_txt(day):
     else:
         print(f"File {filename} not found.")
         # Try to download the puzzle input
-        url = f"https://adventofcode.com/2023/day/{day}/input"
+        url = f"https://adventofcode.com/2024/day/{day}/input"  # attention!!! -> adapt the year accordingly!!!
         session_cookie = open("session_cookie.txt", "r").read().strip()
         headers = {"Cookie": f"session={session_cookie}"}
 
@@ -37,7 +37,7 @@ def read_txt(day):
 
 def main():
     if len(sys.argv) < 3:
-        print("Please provide the day and part as command line arguments. Example: python script.py 1 1")
+        print("Please provide the day and part as command line arguments. Example: python pyaoc.py 1 1")
         return
 
     day = sys.argv[1]
