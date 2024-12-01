@@ -1,4 +1,4 @@
-# AOC2024_py
+# [AOC2024](https://adventofcode.com/2024)_py
 
 This repository contains my solutions for the Advent of Code 2024, written in Python.
 
