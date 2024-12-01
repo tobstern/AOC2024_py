@@ -5,7 +5,11 @@ import importlib
 
 
 def read_txt(day):
-    filename = f"./puzzle_inputs/day{day}.txt"
+    if int(day.split("_")[0]) < 10:
+        filename = f"./puzzle_inputs/day0{day}.txt"
+    else:
+        filename = f"./puzzle_inputs/day{day}.txt"
+
     if os.path.exists(filename):
         try:
             return open(filename, "r").read()
@@ -29,7 +33,7 @@ def read_txt(day):
         except requests.RequestException as e:
             print(f"Failed to download file, error: {e}")
 
-        return open(filename, "r").read() if os.path.exists(filename) else ""
+        return open(filename, "r").read().strip() if os.path.exists(filename) else ""
 
 
 # Define other day and part functions similarly...
@@ -43,7 +47,7 @@ def main():
     day = sys.argv[1]
     part = sys.argv[2]
 
-    input = read_txt(day)
+    input_str = read_txt(day)
 
     if "test" in day:
         day = day.split("_test")[0]
@@ -56,7 +60,7 @@ def main():
 
     func = getattr(day_module, f"part{part}", None)
     if func:
-        func(input)
+        func(input_str)
     else:
         print(f"No function found for day {day}, part {part}")
 
