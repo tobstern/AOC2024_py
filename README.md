@@ -20,6 +20,7 @@ Test inputs can be executed by adding `_test` to the first number:
 python pyaoc.py 1_test 1
 ```
 
+
 ## Input Data
 The input data for each day's puzzle is read from a text file using a function from 'pyaoc.py'. The text files are named according to the day number and are located in the input directory 'puzzle_inputs'.
 For the full input, it will be attempted to download it, thus save your __Session Cookie__ into a file named __session_cookie.txt__!

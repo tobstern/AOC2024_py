@@ -19,6 +19,10 @@
 # Ignore .vscode folder
 .vscode/
 
+# Ignore pycache
+days/__pycache__
+
+
 # Ignore all puzzle_inputs
 puzzle_inputs
 
