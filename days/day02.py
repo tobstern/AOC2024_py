@@ -16,7 +16,11 @@ def part1(input_str):
         nums = list(map(int, line.split(" ")))
         # print(nums)
         curr_diffs = [
-            int((nums[i] - nums[i + 1]) / abs(nums[i] - nums[i + 1])) if 3 >= abs(nums[i] - nums[i + 1]) > 0 else 0
+            (
+                int((nums[i] - nums[i + 1]) / abs(nums[i] - nums[i + 1]))
+                if 3 >= abs(nums[i] - nums[i + 1]) > 0
+                else 0
+            )
             for i in range(0, len(nums) - 1)
         ]
         # print(curr_diffs)
@@ -28,14 +32,29 @@ def part1(input_str):
     print(f"Part 1 execution time: {end_time - start_time} seconds")
 
 
-def check_grad(nums, diffs):
+def check_grad(nums):
+    signs = [sign(nums[i] - nums[i + 1]) for i in range(0, len(nums) - 1)]
+    diffs = [nums[i] - nums[i + 1] for i in range(0, len(nums) - 1)]
     # check neighbouring gradients
     # where diffs are either 0 or changing
     # return 1 if all diffs are >0 and <=3 else 0
     for diff in diffs:
-        if 0 < abs(diff) > 3:
+        if abs(diff) > 3 or diff == 0:
             return 0
-    return 1
+
+    if abs(sum(signs)) == len(signs):
+        return 1
+    else:
+        return 0
+
+
+def sign(num):
+    if num < 0:
+        return -1
+    elif num == 0:
+        return 0
+    else:
+        return 1
 
 
 def part2(input_str):
@@ -50,7 +69,11 @@ def part2(input_str):
         nums = list(map(int, line.split(" ")))
         print(nums)
         curr_diffs = [
-            (int((nums[i] - nums[i + 1]) / abs(nums[i] - nums[i + 1])) if 3 >= abs(nums[i] - nums[i + 1]) > 0 else 0)
+            (
+                sign(nums[i] - nums[i + 1])
+                if abs(nums[i] - nums[i + 1]) <= 3
+                else 0
+            )
             for i in range(0, len(nums) - 1)
         ]
         print(curr_diffs)
@@ -61,15 +84,19 @@ def part2(input_str):
             result += 1
             print("safe first", result)
         else:
-            # check if tolerable:
-            curr_diffs = [
-                (int(nums[i] - nums[i + 1]) if 3 >= abs(nums[i] - nums[i + 1]) > 0 else nums[i] - nums[i + 1])
-                for i in range(0, len(nums) - 1)
-            ]
-            print(curr_diffs)
-            result += check_grad(nums, curr_diffs)
 
-        # result += 1 if abs(sum(curr_diffs)) == len(curr_diffs) else 0
+            # remove "the" wrong digit
+            temp_res = 0
+            for i in range(0, len(nums)):
+                corrected_nums = nums[:i] + nums[i + 1 :]
+                print(corrected_nums)
+                temp_res = check_grad(corrected_nums)
+
+                if temp_res:
+                    print("safe in second round")
+                    break
+
+            result += temp_res
 
     print(f"Part 2 result is: {result}")
 
@@ -78,4 +105,4 @@ def part2(input_str):
 
 
 # 651 too low, 655
-# 714, 716, 875 too high
+# 709, 714, 716, 875 too high
