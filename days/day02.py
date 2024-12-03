@@ -102,7 +102,3 @@ def part2(input_str):
 
     end_time = time.time()
     print(f"Part 2 execution time: {end_time - start_time} seconds")
-
-
-# 651 too low, 655
-# 709, 714, 716, 875 too high
