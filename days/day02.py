@@ -63,29 +63,28 @@ def part2(input_str):
     result = 0
     for line in input_str.splitlines():
         nums = list(map(int, line.split(" ")))
-        print(nums)
+        # print(nums)
         curr_diffs = [
-            (sign(nums[i] - nums[i + 1]) if abs(nums[i] - nums[i + 1]) <= 3 else 0)(
-                sign(nums[i] - nums[i + 1]) if abs(nums[i] - nums[i + 1]) <= 3 else 0
-            )
-            for i in range(0, len(nums) - 1)
+            (sign(nums[i] - nums[i + 1]) if abs(nums[i] - nums[i + 1]) <= 3 else 0) for i in range(0, len(nums) - 1)
         ]
-        print(curr_diffs)
+        # print(curr_diffs)
 
         safe = 1 if abs(sum(curr_diffs)) == len(curr_diffs) else 0
 
         if safe:
             result += 1
-            print("safe first", result)
+            # print("safe first", result)
         else:
 
             # remove "the" wrong digit
             temp_res = 0
-            for i in range(0, len(nums) - 1):
+            for i in range(0, len(nums)):
                 corrected_nums = nums[:i] + nums[i + 1 :]
-                temp_res = check_grad(corrected_nums, curr_diffs)
+                # print(corrected_nums)
+                temp_res = check_grad(corrected_nums)
 
                 if temp_res:
+                    # print("safe in second round")
                     break
 
             result += temp_res
@@ -94,7 +93,3 @@ def part2(input_str):
 
     end_time = time.time()
     print(f"Part 2 execution time: {end_time - start_time} seconds")
-
-
-# 651 too low, 655
-# 709, 714, 716, 875 too high
