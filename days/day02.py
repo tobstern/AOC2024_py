@@ -16,11 +16,7 @@ def part1(input_str):
         nums = list(map(int, line.split(" ")))
         # print(nums)
         curr_diffs = [
-            (
-                int((nums[i] - nums[i + 1]) / abs(nums[i] - nums[i + 1]))
-                if 3 >= abs(nums[i] - nums[i + 1]) > 0
-                else 0
-            )
+            (int((nums[i] - nums[i + 1]) / abs(nums[i] - nums[i + 1])) if 3 >= abs(nums[i] - nums[i + 1]) > 0 else 0)
             for i in range(0, len(nums) - 1)
         ]
         # print(curr_diffs)
@@ -32,14 +28,20 @@ def part1(input_str):
     print(f"Part 1 execution time: {end_time - start_time} seconds")
 
 
-def check_grad(nums, diffs):
+def check_grad(nums):
+    signs = [sign(nums[i] - nums[i + 1]) for i in range(0, len(nums) - 1)]
+    diffs = [nums[i] - nums[i + 1] for i in range(0, len(nums) - 1)]
     # check neighbouring gradients
     # where diffs are either 0 or changing
     # return 1 if all diffs are >0 and <=3 else 0
     for diff in diffs:
         if abs(diff) > 3 or diff == 0:
             return 0
-    return 1
+
+    if abs(sum(signs)) == len(signs):
+        return 1
+    else:
+        return 0
 
 
 def sign(num):
@@ -63,10 +65,8 @@ def part2(input_str):
         nums = list(map(int, line.split(" ")))
         print(nums)
         curr_diffs = [
-            (
-                sign(nums[i] - nums[i + 1])
-                if abs(nums[i] - nums[i + 1]) <= 3
-                else 0
+            (sign(nums[i] - nums[i + 1]) if abs(nums[i] - nums[i + 1]) <= 3 else 0)(
+                sign(nums[i] - nums[i + 1]) if abs(nums[i] - nums[i + 1]) <= 3 else 0
             )
             for i in range(0, len(nums) - 1)
         ]
