@@ -33,17 +33,24 @@ def part2(input_str):
     # Your part2 logic here
 
     # regex matching mul(xxx,xxx) - can be 1-3 digits left and right
-    result = 0
-    # print([int(left) * int(right) for left, right in re.findall(r"mul\(([0-9]{1,3})\,([0-9]{1,3})\)", line)])
-    all_instructs = re.findall(r"(do\(\)|don\(\)|mul\([0-9]{1,3}\,[0-9]{1,3}\))*", input_str)
-    print(all_instructs)
-    # reg_res = all_instructs.group()
-    # print(reg_res)
+    pattern = r"do\(\)|don't\(\)|mul\([0-9]{1,3}\,[0-9]{1,3}\)"
 
-    # check if do()|don't() -> switch on|off sum
-    switch = 1
-    # for instr in all_instructs:
-    #    print(instr)
+    result = 0
+    all_instructs = re.findall(pattern, input_str)
+    print(all_instructs)
+    state = 1
+    for item in all_instructs:
+        print(item)
+        if item == "do()":
+            state = 1
+        elif item == "don't()":
+            state = 0
+        else:
+            if state:
+                left = re.findall(r"([0-9]{1,3}),", item)[0]
+                right = re.findall(r",([0-9]{1,3})", item)[0]
+                print(left, right)
+                result += int(left) * int(right)
 
     print(f"Part 2 result is: {result}")
 
