@@ -39,38 +39,22 @@ def word_search(grid, word):
     return counter
 
 
-def cross_mas_search(grid, word):
+def cross_mas_search(grid):
     max_row = len(grid)
     max_col = len(grid[0])
-    word_len = len(word)
     counter = 0
 
-    def check_word_in_line(line):
-        return line.count(word)
-
+    words = ["MAS", "SAM"]
     # Check horizontal and reverse horizontal
-    for row in grid:
-        line = "".join(row)
-        counter += check_word_in_line(line)
-        counter += check_word_in_line(line[::-1])
+    for i, row in zip(range(1, len(grid) - 1), grid[1:-1, :]):
+        for j, ch in zip(range(1, len(row) - 1), row[1:-1]):
 
-    # Check vertical and reverse vertical
-    for col in range(max_col):
-        line = "".join(grid[row][col] for row in range(max_row))
-        counter += check_word_in_line(line)
-        counter += check_word_in_line(line[::-1])
+            diag1 = grid[i - 1, j - 1] + grid[i, j] + grid[i + 1, j + 1]
+            diag2 = grid[i + 1, j - 1] + grid[i, j] + grid[i - 1, j + 1]
 
-    # Check diagonal (top-left to bottom-right) and reverse diagonal
-    for start in range(max_row + max_col - 1):
-        line = "".join(grid[i][start - i] for i in range(max_row) if 0 <= start - i < max_col)
-        counter += check_word_in_line(line)
-        counter += check_word_in_line(line[::-1])
-
-    # Check diagonal (bottom-left to top-right) and reverse diagonal
-    for start in range(-max_row + 1, max_col):
-        line = "".join(grid[i][i - start] for i in range(max_row) if 0 <= i - start < max_col)
-        counter += check_word_in_line(line)
-        counter += check_word_in_line(line[::-1])
+            if diag1 in words and diag2 in words:
+                # found an X-MAS (MAS cross)
+                counter += 1
 
     return counter
 
@@ -122,9 +106,8 @@ def part2(input_str):
     # loop rows, transpose and loop columns (then they are rows) - also reverse
 
     # exec all of them
-    result = cross_mas_search(np_word_map, word)
+    result = cross_mas_search(np_word_map)
 
-    result = ""
     print(f"Part 2 result is: {result}")
 
     end_time = time.time()
