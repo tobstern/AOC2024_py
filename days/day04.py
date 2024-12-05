@@ -3,62 +3,74 @@ import os
 import numpy as np
 
 
-def word_search(grid, word, counter):
-    # loop left to right and right-down diagonal:
-    (max_row, max_col) = grid.shape
-    # print(max_row, max_col)
-    for i, line in enumerate(grid):
-        char_stack = ""
-        char_stack_diag = ""
+def word_search(grid, word):
+    max_row = len(grid)
+    max_col = len(grid[0])
+    word_len = len(word)
+    counter = 0
 
-        # right
-        for j, ch in enumerate(line):
-            # collect next char till it contains 'XMAS'
-            char_stack += ch
-            if word in char_stack:
-                # if included, count and clear stack
-                counter += 1
-                char_stack = ""
+    def check_word_in_line(line):
+        return line.count(word)
 
-                # diagonal: right-down
-                # chec for bounds
-                if i == 0:
-                    for l in range(0, max_row):
-                        if 0 <= i + l < max_row and 0 <= j + l < max_col:
-                            curr_char = grid[i + l, j + l]
-                            char_stack_diag += curr_char
+    # Check horizontal and reverse horizontal
+    for row in grid:
+        line = "".join(row)
+        counter += check_word_in_line(line)
+        counter += check_word_in_line(line[::-1])
 
-                            if word in char_stack:
-                                # if included, count and clear stack
-                                counter += 1
-                                char_stack_diag = ""
-                        else:
-                            char_stack_diag = ""
-                            break
+    # Check vertical and reverse vertical
+    for col in range(max_col):
+        line = "".join(grid[row][col] for row in range(max_row))
+        counter += check_word_in_line(line)
+        counter += check_word_in_line(line[::-1])
 
-                    else:
-                        char_stack_diag = ""
+    # Check diagonal (top-left to bottom-right) and reverse diagonal
+    for start in range(max_row + max_col - 1):
+        line = "".join(grid[i][start - i] for i in range(max_row) if 0 <= start - i < max_col)
+        counter += check_word_in_line(line)
+        counter += check_word_in_line(line[::-1])
 
-        else:
-            char_stack = ""
+    # Check diagonal (bottom-left to top-right) and reverse diagonal
+    for start in range(-max_row + 1, max_col):
+        line = "".join(grid[i][i - start] for i in range(max_row) if 0 <= i - start < max_col)
+        counter += check_word_in_line(line)
+        counter += check_word_in_line(line[::-1])
 
-        if j == 0 and i > 0:
-            for l in range(0, max_col):
-                if 0 <= i + l < max_row and 0 <= j + l < max_col:
-                    curr_char = grid[i + l, j + l]
-                    char_stack_diag += curr_char
+    return counter
 
-                    if word in char_stack:
-                        # if included, count and clear stack
-                        counter += 1
-                        char_stack_diag = ""
-                else:
-                    char_stack_diag = ""
-                    break
 
-            else:
-                char_stack_diag = ""
-    # implement logic for searching diagonal
+def cross_mas_search(grid, word):
+    max_row = len(grid)
+    max_col = len(grid[0])
+    word_len = len(word)
+    counter = 0
+
+    def check_word_in_line(line):
+        return line.count(word)
+
+    # Check horizontal and reverse horizontal
+    for row in grid:
+        line = "".join(row)
+        counter += check_word_in_line(line)
+        counter += check_word_in_line(line[::-1])
+
+    # Check vertical and reverse vertical
+    for col in range(max_col):
+        line = "".join(grid[row][col] for row in range(max_row))
+        counter += check_word_in_line(line)
+        counter += check_word_in_line(line[::-1])
+
+    # Check diagonal (top-left to bottom-right) and reverse diagonal
+    for start in range(max_row + max_col - 1):
+        line = "".join(grid[i][start - i] for i in range(max_row) if 0 <= start - i < max_col)
+        counter += check_word_in_line(line)
+        counter += check_word_in_line(line[::-1])
+
+    # Check diagonal (bottom-left to top-right) and reverse diagonal
+    for start in range(-max_row + 1, max_col):
+        line = "".join(grid[i][i - start] for i in range(max_row) if 0 <= i - start < max_col)
+        counter += check_word_in_line(line)
+        counter += check_word_in_line(line[::-1])
 
     return counter
 
@@ -77,24 +89,14 @@ def part1(input_str):
         word_map.append(list(line))
 
     np_word_map = np.asarray(word_map)
-    print(np_word_map)
+    # print(np_word_map)
 
     # loop rows, transpose and loop columns (then they are rows) - also reverse
 
-    # modify word map:
-    all_word_maps = [
-        np_word_map,
-        np.transpose(np_word_map),
-        np.fliplr(np_word_map),
-        np.fliplr(np.transpose(np_word_map)),
-    ]
-
     # exec all of them
-    counter = 0
-    for grid in all_word_maps:
-        counter += word_search(grid, word, counter)
+    result = word_search(np_word_map, word)
 
-    print(f"Part 1 result is: {counter}")
+    print(f"Part 1 result is: {result}")
 
     end_time = time.time()
     print(f"Part 1 execution time: {end_time - start_time} seconds")
@@ -107,6 +109,20 @@ def part2(input_str):
     print(f"Day {day_num}, Part 1:")
     # Implement the logic here
     # Your part2 logic here
+
+    word = "MAS"
+    word_map = []
+    for i, line in enumerate(input_str.splitlines()):
+        # print(list(line))
+        word_map.append(list(line))
+
+    np_word_map = np.asarray(word_map)
+    # print(np_word_map)
+
+    # loop rows, transpose and loop columns (then they are rows) - also reverse
+
+    # exec all of them
+    result = cross_mas_search(np_word_map, word)
 
     result = ""
     print(f"Part 2 result is: {result}")
