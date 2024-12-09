@@ -114,7 +114,7 @@ def part2(input_str):
     start_time = time.time()
     filename = os.path.basename(__file__)
     day_num = filename.replace("day", "").replace(".py", "").strip()
-    print(f"Day {day_num}, Part 1:")
+    print(f"Day {day_num}, Part 2:")
     # Implement the logic here
     # Your part2 logic here
 

@@ -132,7 +132,7 @@ def part2(input_str):
     start_time = time.time()
     filename = os.path.basename(__file__)
     day_num = filename.replace("day", "").replace(".py", "").strip()
-    print(f"Day {day_num}, Part 1:")
+    print(f"Day {day_num}, Part 2:")
     # Implement the logic here
 
     rmax = len(input_str.splitlines())
@@ -163,11 +163,7 @@ def part2(input_str):
         for i, (p1, p2) in enumerate(pairs):
             ((p1_rd, p1_cd), (p2_rd, p2_cd)) = dists[i]
 
-            mtpl_count = (
-                max([rmax, cmax])
-                // min(list(map(abs, [p1_rd, p1_cd, p2_rd, p2_cd])))
-                + 1
-            )
+            mtpl_count = max([rmax, cmax]) // min(list(map(abs, [p1_rd, p1_cd, p2_rd, p2_cd]))) + 1
             # print(f"mtpl_count {mtpl_count}")
 
             # do this for all multiples in bounds:
