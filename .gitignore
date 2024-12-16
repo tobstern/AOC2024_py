@@ -22,6 +22,8 @@
 # Ignore pycache
 days/__pycache__
 
+# ignore WIP
+*_WIP*
 
 # Ignore all puzzle_inputs
 puzzle_inputs
