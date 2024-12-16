@@ -31,10 +31,16 @@ def move_guard(lab_grid, start, visited):
 
     while True:
 
+        visited.add(curr_pos)
         # print(curr_pos)
         next_pos = sum_tuples(curr_pos, curr_dir)
 
-        if next_pos[0] < 0 or next_pos[0] >= rmax or next_pos[1] < 0 or next_pos[1] >= cmax:
+        if (
+            next_pos[0] < 0
+            or next_pos[0] >= rmax
+            or next_pos[1] < 0
+            or next_pos[1] >= cmax
+        ):
             return visited
 
         # time.sleep(1)
@@ -50,7 +56,6 @@ def move_guard(lab_grid, start, visited):
             exit("Undefined tile ahead!!!")
 
         # visited.add(curr_pos)
-        visited.add((curr_pos, curr_dir))
 
 
 def part1(input_str):
@@ -79,9 +84,9 @@ def part1(input_str):
     visited = set()
     visited = move_guard(lab_grid, start, visited)
 
-    result = set()
-    for pos, di in visited:
-        result.add(pos)
+    result = visited
+    # for pos, di in visited:
+    #    result.add(pos)
 
     print(f"Part 1 result is: {len(result)}")
 
@@ -118,50 +123,50 @@ def pretty_print_grid(lab_grid, vis, try_pos):
     print("\n\n")
 
 
-def test_circ(lab_grid, start, try_pos):
+def test_circ(lab_grid, start):
     # test for circles:
+    rmax, cmax = (len(lab_grid), len(lab_grid[0]))
     vis = set()
-
-    rmax = len(lab_grid)
-    cmax = len(lab_grid[0])
-    # print(rmax, cmax)
 
     curr_pos = start
     curr_dir = (-1, 0)
-    next_pos = sum_tuples(curr_pos, curr_dir)
+    # next_pos = sum_tuples(curr_pos, curr_dir)
+    r, c = curr_pos
+    dr, dc = curr_dir
 
     while True:
 
-        if ((curr_pos), (curr_dir)) in vis:
-            # print(vis)
-            pretty_print_grid(lab_grid, vis, try_pos)
-            return True
-        # visited.add(curr_pos)
-        # if curr_pos != start:
-        vis.add((curr_pos, curr_dir))
+        vis.add((r, c, dr, dc))
 
-        # print(curr_pos)
-        next_pos = sum_tuples(curr_pos, curr_dir)
+        next_pos = (r + dr, c + dc)
+        nr, nc = next_pos
 
-        if next_pos[0] < 0 or next_pos[0] >= rmax or next_pos[1] < 0 or next_pos[1] >= cmax:
-            break
+        if nr < 0 or nr >= rmax or nc < 0 or nc >= cmax:
+            return False
 
         # time.sleep(1)
-        if lab_grid[next_pos] == "#" or next_pos == try_pos:
+        if lab_grid[nr][nc] == "#":
             # rotate 90° to right
-            curr_dir = rotate90(curr_dir)
-            curr_pos = sum_tuples(curr_pos, curr_dir)
-        elif lab_grid[next_pos] == ".":
-            # follow the direction
-            curr_pos = sum_tuples(curr_pos, curr_dir)
+            # curr_dir = rotate90(curr_dir)
+            dc, dr = -dr, dc
+            curr_dir = (dr, dc)
+            # dr, dc = curr_dir
+            # curr_pos = (r + dr, c + dc)
 
         else:
-            exit("Undefined tile ahead!!!")
+            # follow the direction
+            r += dr
+            c += dc
+            curr_pos = (r, c)
 
         # curr_pos = sum_tuples(curr_pos, curr_dir)
+        if ((r, c, dr, dc)) in vis:
+            # print(vis)
+            # pretty_print_grid(lab_grid, vis, try_pos)
+            return True
 
     # if went out of while loop -> no circle
-    return False
+    # return False
 
 
 def part2(input_str):
@@ -171,44 +176,50 @@ def part2(input_str):
     print(f"Day {day_num}, Part 2:")
     # Implement the logic here
     # Your part2 logic here
-    # lab_grid = []
-    # start = (0, 0)
-    # for i, line in enumerate(input_str.splitlines()):
-    #     lab_grid.append(list(line))
-    #     # save start '^'
-    #     for j, ch in enumerate(line):
-    #         if ch == "^":
-    #             start = (i, j)
-    #             lab_grid[i][j] = "."
 
-    # print(start)
-    # lab_grid = np.asarray(lab_grid)
-    # print(lab_grid)
-
-    visited, lab_grid, start = part1(input_str)
+    # visited, lab_grid, start = part1(input_str)
     # print(visited, lab_grid, start)
     # visited = (pos, dir)
 
+    lab_grid = []
+    start = (0, 0)
+    for i, line in enumerate(input_str.splitlines()):
+        lab_grid.append(list(line))
+        # save start '^'
+        for j, ch in enumerate(line):
+            if ch == "^":
+                start = (i, j)
+                lab_grid[i][j] = "."
+
+    # print(start)
+    # lab_grid = np.asarray(lab_grid)
+    # rmax, cmax = lab_grid.shape
+    rmax, cmax = (len(lab_grid), len(lab_grid[0]))
+    # print(lab_grid)
+
     circ_count = 0
     curr_dir = (-1, 0)
-    for (i, j), (di, dj) in visited:
 
-        # print()
-        # print(((i, j), (di, dj)))
-        # print(visited)
+    # for i, j in visited:
+    for i in range(rmax):
+        for j in range(cmax):
+            # try_pos = (i, j)
+            if lab_grid[i][j] != "." or (i, j) == start:
+                continue
+            # print()
+            # print(((i, j), (di, dj)))
+            # print(visited)
+            lab_grid[i][j] = "#"
+            if test_circ(lab_grid, start):
+                circ_count += 1
 
-        try_pos = (i, j)
-        if lab_grid[i, j] == "#" or (i, j) == start:
-            continue
-            # else:
-            # exchange to #
-            # lab_grid[i, j] = "#"
-
-        if test_circ(lab_grid, start, try_pos):
-            circ_count += 1
-        # print(f"circ_count = {circ_count}")
+            lab_grid[i][j] = "."
+            # print(f"circ_count = {circ_count}")
 
     print(f"Part 2 result is: {circ_count}")
 
     end_time = time.time()
     print(f"Part 2 execution time: {end_time - start_time} seconds")
+
+
+# part 2 takes 77 seconds (brute force)
