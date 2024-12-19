@@ -25,6 +25,9 @@ days/__pycache__
 # ignore WIP
 *_WIP*
 
+# grid_images
+grid_images/
+
 # Ignore all puzzle_inputs
 puzzle_inputs
 
