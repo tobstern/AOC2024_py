@@ -1,7 +1,14 @@
 import time
-import os
 import numpy as np
-from scipy.stats import entropy
+import imageio
+import os
+import matplotlib.pyplot as plt
+
+# Ensure the directory for images exists
+os.makedirs("grid_images", exist_ok=True)
+
+# Initialize a list to store the filenames of the images
+image_filenames = []
 
 
 def parse_input(input_str):
@@ -97,6 +104,7 @@ def part1(input_str):
 
 
 def part2(input_str):
+    make_vid = True
     start_time = time.time()
     filename = os.path.basename(__file__)
     day_num = filename.replace("day", "").replace(".py", "").strip()
@@ -147,22 +155,42 @@ def part2(input_str):
         # sfac = hor
 
         if sec == 100:
-            print(f"sfac={sfac}")
+            pass
+            # print(f"sfac={sfac}")
         if sfac > max_sfac:
             max_sfac = sfac
             result = sec
             safety_facs.append((sfac, sec))
 
-            grid = np.array([["."] * cmax] * rmax, dtype=str)
-            print(grid.shape)
+        if make_vid and sec % 10 == 0 or (sfac, sec) in safety_facs:
+            # every tenth
+            grid = np.array([[0] * cmax] * rmax, dtype=int)
+            # print(grid.shape)
             for i, j in curr_posis:
-                grid[i, j] = "#"
+                # grid[i, j] = "#"
+                grid[i, j] = 1
 
-            print(pretty_print_grid(grid, rmax, cmax))
+            # print(pretty_print_grid(grid, rmax, cmax))
+            # Save the grid as an image
+            image_filename = f"grid_images/grid_{sec}.png"
+            image_filenames.append(image_filename)
+            plt.imshow(grid, cmap="gray")
+            plt.axis("off")
+            plt.savefig(image_filename, bbox_inches="tight")
+            plt.close()
 
     print(safety_facs)
 
     print(f"Part 2 result is: {result}")
+
+    if make_vid:
+        # Create a video from the saved images
+        with imageio.get_writer("./videos/grid_video.mp4", fps=10) as writer:
+            for filename in image_filenames:
+                image = imageio.imread(filename)
+                writer.append_data(image)
+
+        print("Video saved as grid_video.mp4")
 
     end_time = time.time()
     print(f"Part 2 execution time: {end_time - start_time} seconds")
